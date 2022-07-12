@@ -1,16 +1,23 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import EquipmentIndexPage from '../pages/EquipmentIndexPage.vue'
-import EquipmentEditPage from '../pages/EquipmentEditPage.vue'
+import EquipmentCreatePage from '../pages/EquipmentCreatePage.vue'
+import EquipmentPage from "../pages/EquipmentPage";
 
 const routes = [
     {
         path: '/',
-        component: EquipmentIndexPage
-    },
-    {
-        path: '/asd',
-        component: EquipmentEditPage
+        component: EquipmentPage,
+        children: [
+            {
+                path: '',
+                component: EquipmentIndexPage,
+            },
+            {
+                path: 'create',
+                component: EquipmentCreatePage,
+            },
+        ]
     }
 ];
 

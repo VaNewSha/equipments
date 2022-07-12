@@ -21,13 +21,13 @@ class EquipmentType extends Model
         'mask_sn',
     ];
 
-    public const TYPE_1 = 1;
-    public const TYPE_2 = 2;
-    public const TYPE_3 = 3;
+    public const TYPE_MASK_1 = 1;
+    public const TYPE_MASK_2 = 2;
+    public const TYPE_MASK_3 = 3;
 
     public const TYPES_SN = [
-        self::TYPE_1 => '/(?P<type_1>(\A[A-Z0-9]{2}[A-Z]{5}[A-Z0-9]{1}[A-Z]{2}\Z))/',
-        self::TYPE_2 => '/(?P<type_2>(\A[0-9]{1}[A-Z0-9]{2}[A-Z]{2}[A-Z0-9]{1}[-_@]{1}[A-Z0-9]{1}[a-z]{2}\Z))/',
-        self::TYPE_3 => '/(?P<type_3>(\A[0-9]{1}[A-Z0-9]{2}[A-Z]{2}[A-Z0-9]{1}[-_@]{1}[A-Z0-9]{3}\Z))/',
+        self::TYPE_MASK_1 => '/\A[A-Z0-9]{2}[A-Z]{5}[A-Z0-9]{1}[A-Z]{2}\Z/',
+        self::TYPE_MASK_2 => '/\A[0-9]{1}[A-Z0-9]{2}[A-Z]{2}[A-Z0-9]{1}[-_@]{1}[A-Z0-9]{1}[a-z]{2}\Z/',
+        self::TYPE_MASK_3 => '/\A[0-9]{1}[A-Z0-9]{2}[A-Z]{2}[A-Z0-9]{1}[-_@]{1}[A-Z0-9]{3}\Z/',
     ];
 }

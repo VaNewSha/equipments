@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Vue SPA Demo</title>
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <title>Equipments</title>
 </head>
-<body>
-<div id="app">
+<body class="bg-dark">
+<div id="app" class="container">
     <app></app>
-    <router-view />
 </div>
 
 <script src="{{ mix('js/app.js') }}"></script>

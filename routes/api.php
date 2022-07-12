@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\EquipmentController;
+use App\Http\Controllers\Api\EquipmentTypeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::name('api.')->group(function () {
-    Route::apiResource('equipments', EquipmentController::class);
+    Route::apiResource('equipment', EquipmentController::class);
+    Route::get('equipment-type', [EquipmentTypeController::class, 'getEquipmentType']);
 });
 

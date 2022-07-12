@@ -16,8 +16,8 @@ class CreateEquipments extends Migration
         Schema::create('equipments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('equipment_types_id')->constrained();
-            $table->string('mask_sn')->unique();
-            $table->text('title')->nullable(true);;
+            $table->string('sn')->unique();
+            $table->text('note')->nullable(true);;
         });
     }
 
