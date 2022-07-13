@@ -11,14 +11,6 @@
                           Оборудование
                       </router-link>
                   </li>
-                  <li class="nav-item">
-                      <router-link
-                          class="nav-link text-center"
-                          to="/"
-                      >
-                          Equipments Types
-                      </router-link>
-                  </li>
               </ul>
           </div>
       </nav>
