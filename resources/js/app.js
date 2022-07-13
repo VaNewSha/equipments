@@ -1,14 +1,15 @@
 require('./bootstrap');
 
-
 import { createApp } from 'vue';
 import router from './router'
+import Notifications from '@kyvg/vue3-notification'
 
-import EquipmentIndexPage from './pages/EquipmentIndexPage.vue';
-import EquipmentEditPage from './pages/EquipmentEditPage.vue';
+import App from './App.vue';
+import ModalComponent from './components/ModalComponent.vue';
+import PaginationComponent from './components/PaginationComponent.vue';
 
 createApp({
     components: {
-        EquipmentIndexPage, EquipmentEditPage
+        App, PaginationComponent, ModalComponent
     }
-}).use(router).mount('#app')
+}).use(Notifications).use(router).mount('#app')

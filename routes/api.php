@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\EquipmentController;
+use App\Http\Controllers\Api\EquipmentTypeController;
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,7 +16,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::name('api.')->group(function () {
-    Route::apiResource('equipments', EquipmentController::class);
+Route::group(['middleware' => 'api'], function ($router) {
+    Route::post('login', [AuthController::class, 'login']);
+    Route::post('logout', [AuthController::class, 'logout']);
+    Route::post('refresh', [AuthController::class, 'refresh']);
+    Route::post('me', [AuthController::class, 'me']);
+
+    Route::group(['middleware' => 'auth'], function () {
+        Route::apiResource('equipment', EquipmentController::class);
+        Route::get('equipment-type', [EquipmentTypeController::class, 'getEquipmentType']);
+    });
 });
 
