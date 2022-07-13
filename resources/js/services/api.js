@@ -7,6 +7,14 @@ class Api {
         return axios.get(`/api/equipment${Api.paramsBuilder(params)}`);
     }
 
+    static createEquipmentData(body) {
+        return axios.post('/api/equipment', body);
+    }
+
+    static showEquipmentData(id) {
+        return axios.get(`/api/equipment/${id}`);
+    }
+
     static updateEquipmentData(id, body) {
         return axios.put(`/api/equipment/${id}`, body);
     }

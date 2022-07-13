@@ -8,7 +8,7 @@
                           class="nav-link text-center"
                           to="/"
                       >
-                          Equipments
+                          Оборудование
                       </router-link>
                   </li>
                   <li class="nav-item">
@@ -23,6 +23,7 @@
           </div>
       </nav>
       <router-view />
+      <notifications />
   </div>
 </template>
 

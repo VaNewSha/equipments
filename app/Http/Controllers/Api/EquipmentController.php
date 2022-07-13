@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\EquipmentStoreRequest;
 use App\Http\Requests\EquipmentUpdateRequest;
 use App\Http\Resources\BaseCollection;
 use App\Http\Resources\EquipmentResource;
@@ -29,23 +30,28 @@ class EquipmentController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  EquipmentStoreRequest $request
+     * @param EquipmentService $service
+     * @return BaseCollection
      */
-    public function store(Request $request)
+    public function store(EquipmentStoreRequest $request, EquipmentService $service): BaseCollection
     {
-        //
+        $validated = $request->validated();
+
+        $data = $service->createEquipments($validated['data']);
+
+        return new BaseCollection($data);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Equipment $equipment
+     * @return EquipmentResource
      */
-    public function show($id)
+    public function show(Equipment $equipment): EquipmentResource
     {
-        //
+        return new EquipmentResource($equipment);
     }
 
     /**

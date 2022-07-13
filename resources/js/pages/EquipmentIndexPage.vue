@@ -36,25 +36,25 @@
         <div class="row mt-2">
             <div class="col">
                 <div class="table-responsive">
-                    <table class="table table-striped text-center table-bordered">
+                        <table class="table table-striped text-center table-bordered">
                         <thead>
                         <tr>
-                            <th class="align-middle">
+                            <th class="col-md-2 align-middle">
                                 Код оборудования
                             </th>
-                            <th class="align-middle">
+                            <th class="col-md-2 align-middle">
                                 Тип оборудования
                             </th>
-                            <th class="align-middle">
+                            <th class="col-md-2 align-middle">
                                 Серийный номер
                             </th>
                             <th class="align-middle">
                                 Примечание
                             </th>
-                            <th class="align-middle">
+                            <th class="col-md-1 align-middle">
                                 Редактировать
                             </th>
-                            <th class="align-middle">
+                            <th class="col-md-1 align-middle">
                                 Удалить
                             </th>
                         </tr>
@@ -64,7 +64,7 @@
                             v-for="(item, index) in equipments"
                             :key="index"
                         >
-                            <td >
+                            <td @click="getEquipment(item['id'])">
                                 <input
                                     type="text"
                                     class="p-2 mt-2 mb-2 text-center form-control"
@@ -75,7 +75,7 @@
                             <td>
                                 <select
                                     v-model="item['equipment_types_id']"
-                                    class="p-2 mt-2 mb-2  form-control"
+                                    class="p-2 mt-2 mb-2 form-control text-center"
                                     :disabled="item['edit'] !== true"
                                 >
                                     <option
@@ -91,8 +91,7 @@
                                 <input
                                     name="sn"
                                     type="text"
-                                    min="1"
-                                    class="p-2 mt-2 mb-2  text-center form-control"
+                                    class="p-2 mt-2 mb-2 text-center form-control"
                                     v-model="item['sn']"
                                     :disabled="item['edit'] !== true"
                                 >
@@ -116,6 +115,7 @@
                                 </button>
                                 <button
                                     v-if="item['edit']"
+                                    type="submit"
                                     class="form-control p-2 mt-2 mb-2 text-center"
                                     @click="updateEquipmentData(
                                         item['id'], item['equipment_types_id'], item['sn'], item['note'], index
@@ -143,7 +143,7 @@
         <div class="row">
             <PaginationComponent
                 :links="paginationLinks"
-                @refreshLinkData="getEquipmentData"
+                @refreshLinkData="getEquipmentsData"
             />
         </div>
 
@@ -185,26 +185,26 @@ export default {
                         this.page = 1;
                     }
                     this.filter = val;
-                    this.getEquipmentData(this.page);
+                    this.getEquipmentsData(this.page);
                 }, 500);
             },
         },
     },
 
     mounted() {
-        this.getEquipmentTypeData();
-        this.getEquipmentData(this.page);
+        this.getEquipmentTypesData();
+        this.getEquipmentsData(this.page);
     },
 
     methods: {
-        getEquipmentTypeData() {
+        getEquipmentTypesData() {
             Api.getEquipmentTypeData()
                 .then((response) => {
                     this.equipment_types = response.data.data;
                 })
         },
 
-        getEquipmentData(page) {
+        getEquipmentsData(page) {
             this.page = page;
             Api.getEquipmentData( {page, filter: this.filter})
             .then((response) => {
@@ -217,15 +217,47 @@ export default {
             })
         },
 
-        updateEquipmentData(id, equipmentTypeId, sn, note, index) {
-            this.equipments[index]['edit'] = false;
-            Api.updateEquipmentData(id,
-                {
-                    equipmentTypeId: equipmentTypeId,
-                    sn: sn,
-                    note: note,
+        getEquipment(id) {
+            Api.showEquipmentData(id)
+                .then((response) => {
+                    let data = response.data.data;
+                    let info = `ID: ${data.id}, Type: ${data.equipment_types_id}, Serial number: ${data.sn}`
+                    this.$notify({
+                        text: info ,
+                    });
                 })
-                .then();
+        },
+
+        updateEquipmentData(id, equipmentTypeId, sn, note, index) {
+            if (sn.length === 10) {
+                Api.updateEquipmentData(id,
+                    {
+                        equipmentTypeId: equipmentTypeId,
+                        sn: sn,
+                        note: note,
+                    })
+                    .then(() => {
+                        this.equipments[index]['edit'] = false;
+
+                        this.$notify({
+                            type: 'success',
+                            text: "Данные оборудования обновлены!",
+                        });
+                    })
+                    .catch(error => {
+                        this.$notify({
+                            type: 'error',
+                            title: "Ошибка обновления",
+                            text: error.response.data.message,
+                        });
+                    }
+                    );
+            } else {
+                this.$notify({
+                    type: 'error',
+                    text: `Строка ${index + 1}, ID ${id}: Поле 'Серийный номер' не соответствует нужной длине`,
+                });
+            }
         },
 
         getEditRow(index) {
@@ -234,7 +266,7 @@ export default {
 
         close() {
             this.modalShowing = null;
-            this.getEquipmentData(this.page);
+            this.getEquipmentsData(this.page);
         },
     }
 }

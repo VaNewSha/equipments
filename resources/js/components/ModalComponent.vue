@@ -1,12 +1,12 @@
 <template>
-  <div
+    <div
     id="modal"
     class="modal fade"
     tabindex="-1"
     role="dialog"
     aria-labelledby="modalLabel"
     aria-hidden="true"
-  >
+    >
     <div
       class="modal-dialog modal-dialog-centered"
       role="document"
@@ -52,7 +52,7 @@
         </div>
       </div>
     </div>
-  </div>
+    </div>
 </template>
 
 <script>
@@ -83,6 +83,9 @@ export default {
     },
     deleteRecord() {
         Api.deleteEquipmentData(this.showing.id).then(() => {
+        this.$notify({
+            text: "Данные оборудования удалены!",
+        });
           this.$emit('close');
         });
     },

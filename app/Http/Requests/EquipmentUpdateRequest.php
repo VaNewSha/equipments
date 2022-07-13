@@ -21,7 +21,7 @@ class EquipmentUpdateRequest extends FormRequest
             ],
             'sn' => [
                 'string',
-                'min:1',
+                'min:10',
                 'max:10',
             ],
             'note' => [
