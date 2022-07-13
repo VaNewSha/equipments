@@ -10,6 +10,7 @@ class EquipmentType extends Model
     use HasFactory;
 
     protected $table = 'equipment_types';
+    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.

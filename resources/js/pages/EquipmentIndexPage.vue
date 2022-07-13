@@ -198,7 +198,7 @@ export default {
 
     methods: {
         getEquipmentTypesData() {
-            Api.getEquipmentTypeData()
+            Api.getEquipmentTypeData(localStorage.getItem('access_token'))
                 .then((response) => {
                     this.equipment_types = response.data.data;
                 })
@@ -206,7 +206,7 @@ export default {
 
         getEquipmentsData(page) {
             this.page = page;
-            Api.getEquipmentData( {page, filter: this.filter})
+            Api.getEquipmentData( {page, filter: this.filter}, localStorage.getItem('access_token'))
             .then((response) => {
                 this.equipments = response.data.data;
                 this.paginationLinks = response.data.meta.links;
@@ -218,7 +218,7 @@ export default {
         },
 
         getEquipment(id) {
-            Api.showEquipmentData(id)
+            Api.showEquipmentData(id, localStorage.getItem('access_token'))
                 .then((response) => {
                     let data = response.data.data;
                     let info = `ID: ${data.id}, Type: ${data.equipment_types_id}, Serial number: ${data.sn}`
@@ -235,7 +235,7 @@ export default {
                         equipmentTypeId: equipmentTypeId,
                         sn: sn,
                         note: note,
-                    })
+                    }, localStorage.getItem('access_token'))
                     .then(() => {
                         this.equipments[index]['edit'] = false;
 

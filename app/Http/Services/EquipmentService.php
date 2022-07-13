@@ -100,7 +100,7 @@ class EquipmentService
                 . ' не проходит по маске оборудования!');
         }
 
-        if (!$this->checkSerialNumberUniqueness($validated['sn'])) {
+        if ($equipment->equipment_types_id !== $validated['equipmentTypeId'] && !$this->checkSerialNumberUniqueness($validated['sn'])) {
             throw new EquipmentSNUniqueException('Серийный номер: ' . $validated['sn']
                 . ' не вляется уникальным!');
         }

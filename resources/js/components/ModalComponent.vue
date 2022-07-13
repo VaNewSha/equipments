@@ -82,7 +82,7 @@ export default {
       this.$emit('close');
     },
     deleteRecord() {
-        Api.deleteEquipmentData(this.showing.id).then(() => {
+        Api.deleteEquipmentData(this.showing.id, localStorage.getItem('access_token')).then(() => {
         this.$notify({
             text: "Данные оборудования удалены!",
         });

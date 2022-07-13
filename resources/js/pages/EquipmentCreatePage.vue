@@ -99,7 +99,7 @@ export default {
 
     methods: {
         getEquipmentTypesData() {
-            Api.getEquipmentTypeData()
+            Api.getEquipmentTypeData(localStorage.getItem('access_token'))
                 .then((response) => {
                     this.equipment_types = response.data.data;
                 })
@@ -118,7 +118,7 @@ export default {
             })
 
             if (this.errors === '') {
-                Api.createEquipmentData({ data: this.equipments })
+                Api.createEquipmentData({ data: this.equipments }, localStorage.getItem('access_token'))
                     .then(() => {
                         this.$notify({
                             type: 'success',

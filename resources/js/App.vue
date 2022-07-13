@@ -30,6 +30,24 @@
 <script>
 
 export default {
+    data() {
+        return {
+            email: 'test@test.com',
+            password: 'password',
+        }
+    },
+    created() {
+        this.getJWT();
+    },
+
+    methods: {
+        getJWT() {
+            axios.post('/api/login', {email: this.email, password: this.password})
+                .then((response) => {
+                    localStorage.access_token = response.data.access_token
+                })
+        }
+    }
 
 };
 </script>
