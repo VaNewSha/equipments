@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EquipmentStoreRequest;
 use App\Http\Requests\EquipmentUpdateRequest;
-use App\Http\Resources\BaseCollection;
+use App\Http\Resources\EquipmentStoreCollection;
 use App\Http\Resources\EquipmentResource;
 use App\Http\Services\EquipmentService;
 use App\Models\Equipment;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class EquipmentController extends Controller
 {
@@ -18,13 +20,13 @@ class EquipmentController extends Controller
      *
      * @param Request $request
      * @param EquipmentService $service
-     * @return BaseCollection
+     * @return AnonymousResourceCollection
      */
-    public function index(Request $request, EquipmentService $service): BaseCollection
+    public function index(Request $request, EquipmentService $service): AnonymousResourceCollection
     {
         $data = $service->getEquipmentList($request);
 
-        return new BaseCollection($data);
+        return EquipmentResource::collection($data);
     }
 
     /**
@@ -32,15 +34,15 @@ class EquipmentController extends Controller
      *
      * @param  EquipmentStoreRequest $request
      * @param EquipmentService $service
-     * @return BaseCollection
+     * @return EquipmentStoreCollection
      */
-    public function store(EquipmentStoreRequest $request, EquipmentService $service): BaseCollection
+    public function store(EquipmentStoreRequest $request, EquipmentService $service): EquipmentStoreCollection
     {
         $validated = $request->validated();
 
         $data = $service->createEquipments($validated['data']);
 
-        return new BaseCollection($data);
+        return new EquipmentStoreCollection($data);
     }
 
     /**

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\BaseCollection;
+use App\Http\Resources\EquipmentStoreCollection;
 use App\Http\Services\EquipmentTypeService;
 use Illuminate\Http\Request;
 
@@ -14,13 +14,13 @@ class EquipmentTypeController extends Controller
      *
      * @param Request $request
      * @param EquipmentTypeService $service
-     * @return BaseCollection
+     * @return EquipmentStoreCollection
      */
-    public function getEquipmentType(Request $request, EquipmentTypeService $service): BaseCollection
+    public function getEquipmentType(Request $request, EquipmentTypeService $service): EquipmentStoreCollection
     {
         $data = $service->getEquipmentTypesList($request);
 
-        return new BaseCollection($data);
+        return new EquipmentStoreCollection($data);
     }
 
 }

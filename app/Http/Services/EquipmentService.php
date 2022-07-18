@@ -8,6 +8,7 @@ use App\Exceptions\EquipmentSNUniqueException;
 use App\Models\Equipment;
 use App\Models\EquipmentType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class EquipmentService
 {
@@ -44,44 +45,50 @@ class EquipmentService
      */
     public function createEquipments(array $validated): array
     {
+        $errorsSN = '';
+        $errorsUniq = '';
         $errors = '';
 
-        foreach ($validated as $item) {
+        foreach ($validated as $i => $item) {
             if (!$this->checkSerialNumberMask($item['equipment_types_id'] ,$item['sn'])) {
-                $errors = $errors . ' ' . $item['sn'];
+                $errorsSN = $errorsSN . ' ' . $item['sn'];
+                unset($validated[$i]);
             }
         }
 
-        if ($errors != '') {
-            throw new EquipmentSNMaskException('Серийный номер(а): ' . $errors
-                . ' не проходит по маске оборудования!');
-        }
-
-        foreach ($validated as $item) {
+        foreach ($validated as $i => $item) {
             if (!$this->checkSerialNumberUniqueness($item['sn'])) {
-                $errors = $errors . ' ' . $item['sn'];
+                $errorsUniq = $errorsUniq . ' ' . $item['sn'];
+                unset($validated[$i]);
             }
         }
 
-        if ($errors != '') {
-            throw new EquipmentSNUniqueException('Серийный номер(а): ' . $errors
-                . ' не вляется уникальным!');
+        if($errorsSN != '' && $errorsUniq != '') {
+            $errors = 'Не прошли по маске Серийного номера:' . $errorsSN
+                . '. Не прошли по уникальности номера:' . $errorsUniq;
+        } else if ($errorsSN != '') {
+            $errors = 'Не прошли по маске Серийного номера:' . $errorsSN;
+        } else if ($errorsUniq != '') {
+            $errors = 'Не прошли по уникальности номера:' . $errorsUniq;
         }
+
 
         $json = [];
 
-        foreach ($validated as $item) {
-            $equipment = new Equipment();
+        if (count($validated) != 0) {
+            foreach ($validated as $item) {
+                $equipment = new Equipment();
 
-            $equipment->equipment_types_id = $item['equipment_types_id'];
-            $equipment->sn = $item['sn'];
-            $equipment->note = $item['note'];
+                $equipment->equipment_types_id = $item['equipment_types_id'];
+                $equipment->sn = $item['sn'];
+                $equipment->note = $item['note'];
 
-            $equipment->save();
-            $json[] = $equipment->refresh();
+                $equipment->save();
+                $json[] = $equipment->refresh();
+            }
         }
 
-        return $json;
+        return ['data' => $json, 'errors' => $errors];
     }
 
     /**
@@ -139,8 +146,16 @@ class EquipmentService
      */
     public function checkSerialNumberMask(int $equipmentTypeId, string $serialNumber): bool
     {
-        $maskSN = EquipmentType::TYPES_SN[$equipmentTypeId];
-        preg_match($maskSN, $serialNumber, $matches);
+        $maskSN = EquipmentType::query()->where('id', '=', $equipmentTypeId)->value('mask_sn');
+        $regMaskSN = '';
+
+        foreach (str_split($maskSN) as $char) {
+            $regMaskSN = $regMaskSN . EquipmentType::TYPES_SN[$char];
+        }
+
+        $regMaskSN = '/\A' . $regMaskSN . '\Z/';
+
+        preg_match($regMaskSN, $serialNumber, $matches);
 
         if ($matches == []) {
             return false;

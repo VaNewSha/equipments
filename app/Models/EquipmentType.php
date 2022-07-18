@@ -22,13 +22,17 @@ class EquipmentType extends Model
         'mask_sn',
     ];
 
-    public const TYPE_MASK_1 = 1;
-    public const TYPE_MASK_2 = 2;
-    public const TYPE_MASK_3 = 3;
+    public const MASK_N = '[0-9]{1}';
+    public const MASK_A = '[A-Z]{1}';
+    public const MASK_a = '[a-z]{1}';
+    public const MASK_X = '[A-Z0-9]{1}';
+    public const MASK_Z = '[-_@]{1}';
 
     public const TYPES_SN = [
-        self::TYPE_MASK_1 => '/\A[A-Z0-9]{2}[A-Z]{5}[A-Z0-9]{1}[A-Z]{2}\Z/',
-        self::TYPE_MASK_2 => '/\A[0-9]{1}[A-Z0-9]{2}[A-Z]{2}[A-Z0-9]{1}[-_@]{1}[A-Z0-9]{1}[a-z]{2}\Z/',
-        self::TYPE_MASK_3 => '/\A[0-9]{1}[A-Z0-9]{2}[A-Z]{2}[A-Z0-9]{1}[-_@]{1}[A-Z0-9]{3}\Z/',
+        'N' => self::MASK_N,
+        'A' => self::MASK_A,
+        'a' => self::MASK_a,
+        'X' => self::MASK_X,
+        'Z' => self::MASK_Z,
     ];
 }
