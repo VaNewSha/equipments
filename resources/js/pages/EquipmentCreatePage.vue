@@ -118,23 +118,40 @@ export default {
             })
 
             if (this.errors === '') {
-                Api.createEquipmentData({ data: this.equipments }, localStorage.getItem('access_token'))
-                    .then(() => {
-                        this.$notify({
-                            type: 'success',
-                            text: "Данные нового оборудования успешно сохранены!",
-                        });
+                Api.createEquipmentData({data: this.equipments}, localStorage.getItem('access_token'))
+                    .then((response) => {
+                        let respData = response.data.data;
 
-                        this.$router.go(-1);
-                    }).catch((error) => {
-                        this.$notify({
-                            type: 'error',
-                            title: "Ошибка",
-                            text: error.response.data.message,
-                            duration: 5000
-                        });
+                        if (respData.errors === '') {
+                            this.$notify({
+                                type: 'success',
+                                text: "Данные нового оборудования успешно сохранены!",
+                            });
+                            this.$router.go(-1);
+                        } else {
+                            let savedEquipments = [];
 
-                        this.errors = '';
+                            respData.data.forEach(element => {
+                                savedEquipments.push(element.sn)
+                            });
+
+                            let newData = []
+                            this.equipments.forEach((item) => {
+                                if (!this.checkCreatedEquipments(savedEquipments, item.sn)) {
+                                    newData.push(item);
+                                }
+                            })
+
+                            if(newData !== []) {
+                                this.equipments = newData;
+                            }
+
+                            this.$notify({
+                                type: 'error',
+                                text: respData.errors,
+                                duration: 5000
+                            });
+                        }
                     });
             } else {
                 this.$notify({
@@ -146,6 +163,15 @@ export default {
 
                 this.errors = '';
             }
+        },
+
+        checkCreatedEquipments(array, sn) {
+            for ( let i = 0; i < array.length; i += 1) {
+                if (array[i].includes(sn)) {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

@@ -15,16 +15,16 @@ class EquipmentStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            '*.*.equipment_types_id' => [
+            'data.*.equipment_types_id' => [
                 'required',
                 'integer',
             ],
-            '*.*.sn' => [
+            'data.*.sn' => [
                 'string',
                 'min:10',
                 'max:10',
             ],
-            '*.*.note' => [
+            'data.*.note' => [
                 'nullable',
                 'string',
             ],
