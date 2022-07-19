@@ -5,13 +5,11 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EquipmentStoreRequest;
 use App\Http\Requests\EquipmentUpdateRequest;
-use App\Http\Resources\EquipmentStoreCollection;
 use App\Http\Resources\EquipmentResource;
 use App\Http\Services\EquipmentService;
 use App\Models\Equipment;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class EquipmentController extends Controller
 {
@@ -34,15 +32,15 @@ class EquipmentController extends Controller
      *
      * @param  EquipmentStoreRequest $request
      * @param EquipmentService $service
-     * @return EquipmentStoreCollection
+     * @return AnonymousResourceCollection
      */
-    public function store(EquipmentStoreRequest $request, EquipmentService $service): EquipmentStoreCollection
+    public function store(EquipmentStoreRequest $request, EquipmentService $service): AnonymousResourceCollection
     {
         $validated = $request->validated();
 
         $data = $service->createEquipments($validated['data']);
 
-        return new EquipmentStoreCollection($data);
+        return EquipmentResource::collection($data);
     }
 
     /**

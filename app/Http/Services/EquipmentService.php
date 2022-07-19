@@ -45,50 +45,20 @@ class EquipmentService
      */
     public function createEquipments(array $validated): array
     {
-        $errorsSN = '';
-        $errorsUniq = '';
-        $errors = '';
-
-        foreach ($validated as $i => $item) {
-            if (!$this->checkSerialNumberMask($item['equipment_types_id'] ,$item['sn'])) {
-                $errorsSN = $errorsSN . ' ' . $item['sn'];
-                unset($validated[$i]);
-            }
-        }
-
-        foreach ($validated as $i => $item) {
-            if (!$this->checkSerialNumberUniqueness($item['sn'])) {
-                $errorsUniq = $errorsUniq . ' ' . $item['sn'];
-                unset($validated[$i]);
-            }
-        }
-
-        if($errorsSN != '' && $errorsUniq != '') {
-            $errors = 'Не прошли по маске Серийного номера:' . $errorsSN
-                . '. Не прошли по уникальности номера:' . $errorsUniq;
-        } else if ($errorsSN != '') {
-            $errors = 'Не прошли по маске Серийного номера:' . $errorsSN;
-        } else if ($errorsUniq != '') {
-            $errors = 'Не прошли по уникальности номера:' . $errorsUniq;
-        }
-
-
         $json = [];
 
-        if (count($validated) != 0) {
-            foreach ($validated as $item) {
-                $equipment = new Equipment();
+        foreach ($validated as $item) {
+            $equipment = new Equipment();
 
-                $equipment->equipment_types_id = $item['equipment_types_id'];
-                $equipment->sn = $item['sn'];
-                $equipment->note = $item['note'];
+            $equipment->equipment_types_id = $item['equipment_types_id'];
+            $equipment->sn = $item['sn'];
+            $equipment->note = $item['note'];
 
-                $equipment->save();
-                $json[] = $equipment->refresh();
-            }
+            $equipment->save();
+            $json[] = $equipment->refresh();
         }
 
-        return ['data' => $json, 'errors' => $errors];
+        return $json;
     }
 
     /**

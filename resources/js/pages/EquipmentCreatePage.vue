@@ -119,40 +119,26 @@ export default {
 
             if (this.errors === '') {
                 Api.createEquipmentData({data: this.equipments}, localStorage.getItem('access_token'))
-                    .then((response) => {
-                        let respData = response.data.data;
-
-                        if (respData.errors === '') {
-                            this.$notify({
-                                type: 'success',
-                                text: "Данные нового оборудования успешно сохранены!",
-                            });
-                            this.$router.go(-1);
-                        } else {
-                            let savedEquipments = [];
-
-                            respData.data.forEach(element => {
-                                savedEquipments.push(element.sn)
-                            });
-
-                            let newData = []
-                            this.equipments.forEach((item) => {
-                                if (!this.checkCreatedEquipments(savedEquipments, item.sn)) {
-                                    newData.push(item);
-                                }
-                            })
-
-                            if(newData !== []) {
-                                this.equipments = newData;
-                            }
-
-                            this.$notify({
-                                type: 'error',
-                                text: respData.errors,
-                                duration: 5000
-                            });
+                    .then(() => {
+                        this.$notify({
+                            type: 'success',
+                            text: "Данные нового оборудования успешно сохранены!",
+                        });
+                        this.$router.go(-1);
+                    })
+                    .catch(error => {
+                        let notificationMessage = '';
+                        for (const [key, value] of Object.entries(error.response.data.errors)) {
+                            notificationMessage += `${key}: ${value}. \n`
                         }
-                    });
+
+                        this.$notify({
+                            type: 'error',
+                            title: "Ошибка сохранения",
+                            text: notificationMessage,
+                            duration: 10000
+                    })
+                })
             } else {
                 this.$notify({
                     type: 'error',
@@ -164,15 +150,6 @@ export default {
                 this.errors = '';
             }
         },
-
-        checkCreatedEquipments(array, sn) {
-            for ( let i = 0; i < array.length; i += 1) {
-                if (array[i].includes(sn)) {
-                    return true;
-                }
-            }
-            return false;
-        }
     }
 }
 </script>
